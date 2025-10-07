@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  username      String   @unique
+  password_hash String
+  first_name    String
+  last_name     String
+
+  feeds     Feed[]
+  comments  Comment[]
+  reports   Report[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Feed {
+  id           Int      @id @default(autoincrement())
+  text_content String?
+  is_hidden    Boolean  @default(false)
+
+  author    User @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  author_id Int
+
+  images   FeedImage[]
+  comments Comment[]
+  reports  Report[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model FeedImage {
+  id        Int      @id @default(autoincrement())
+  image_url String
+
+  feed    Feed @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  feed_id Int
+
+  created_at DateTime @default(now())
+}
+
+model Comment {
+  id           Int    @id @default(autoincrement())
+  text_content String
+
+  author    User @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  author_id Int
+
+  feed    Feed @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  feed_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Report {
+  id Int @id @default(autoincrement())
+
+  reporter    User @relation(fields: [reporter_id], references: [id], onDelete: Cascade)
+  reporter_id Int
+
+  feed    Feed @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  feed_id Int
+
+  created_at DateTime @default(now())
+
+  @@unique([reporter_id, feed_id], name: "unique_report_per_user_feed")
+}
