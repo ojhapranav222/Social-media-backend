@@ -1,4 +1,3 @@
--- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
@@ -12,7 +11,6 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "Feed" (
     "id" SERIAL NOT NULL,
     "text_content" TEXT NOT NULL,
@@ -24,7 +22,6 @@ CREATE TABLE "Feed" (
     CONSTRAINT "Feed_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "FeedImage" (
     "id" SERIAL NOT NULL,
     "image_url" TEXT NOT NULL,
@@ -34,7 +31,6 @@ CREATE TABLE "FeedImage" (
     CONSTRAINT "FeedImage_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "Comment" (
     "id" SERIAL NOT NULL,
     "text_content" TEXT NOT NULL,
@@ -46,7 +42,6 @@ CREATE TABLE "Comment" (
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
 CREATE TABLE "Report" (
     "id" SERIAL NOT NULL,
     "reporter_id" INTEGER NOT NULL,
@@ -56,29 +51,29 @@ CREATE TABLE "Report" (
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
--- CreateIndex
+
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
--- CreateIndex
+
 CREATE UNIQUE INDEX "Report_reporter_id_feed_id_key" ON "Report"("reporter_id", "feed_id");
 
--- AddForeignKey
+
 ALTER TABLE "Feed" ADD CONSTRAINT "Feed_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
+
 ALTER TABLE "FeedImage" ADD CONSTRAINT "FeedImage_feed_id_fkey" FOREIGN KEY ("feed_id") REFERENCES "Feed"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
+
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
+
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_feed_id_fkey" FOREIGN KEY ("feed_id") REFERENCES "Feed"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
+
 ALTER TABLE "Report" ADD CONSTRAINT "Report_reporter_id_fkey" FOREIGN KEY ("reporter_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
+
 ALTER TABLE "Report" ADD CONSTRAINT "Report_feed_id_fkey" FOREIGN KEY ("feed_id") REFERENCES "Feed"("id") ON DELETE CASCADE ON UPDATE CASCADE;

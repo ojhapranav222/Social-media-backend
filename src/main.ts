@@ -20,17 +20,27 @@ async function bootstrap() {
   // Global Validation Pipe
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  // Swagger API Documentation
-  const config = new DocumentBuilder()
-    .setTitle('Social Feed API')
-    .setDescription('API documentation for the Social Feed platform')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+    // Swagger API Documentation
+    const config = new DocumentBuilder()
+      .setTitle('Social Feed API')
+      .setDescription('API documentation for the Social Feed platform')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
 
-  await app.listen(port);
-  console.log(`Application is running on: ${await app.getUrl()}`);
-}
-bootstrap();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+    
+    // CORS
+    const corsOrigin = configService.get<string>('CORS_ORIGIN', '*');
+    app.enableCors({
+      origin: corsOrigin,
+    });
+    console.log(`CORS enabled for origin: ${corsOrigin}`);
+    await app.listen(port);
+    console.log(`Application is running on: ${await app.getUrl()}`);
+  }
+
+  bootstrap();
+
+  

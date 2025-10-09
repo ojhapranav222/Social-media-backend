@@ -11,6 +11,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggingModule } from './core/logging/logging.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { LoggingModule } from './core/logging/logging.module';
     ReportsModule,
     LoggingModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
